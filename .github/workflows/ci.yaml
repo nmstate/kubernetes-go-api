@@ -1,0 +1,27 @@
+on:
+  pull_request:
+   types: [opened, synchronize, reopened]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps: 
+    - uses: actions/checkout@v3
+    - name: install deps
+      run: |
+        #!/bin/bash -e
+        apt-get update
+        apt-get install -y make git curl gcc
+    - name: Install GH CLI
+      uses: dev-hanz-ops/install-gh-cli-action@v0.1.0
+      with:
+        gh-cli-version: 2.32.0 # optional, see action.yml for current default
+    - uses: actions-rust-lang/setup-rust-toolchain@v1
+    - uses: actions/setup-go@v5
+      with:
+        go-version-file: 'v2/go.mod'
+    - name: make generate
+      run: make generate
+    - name: make lint
+      run: make lint
+    - name: make test
+      run: make test
