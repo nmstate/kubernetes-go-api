@@ -1,0 +1,18 @@
+[package]
+name = "nmstate-kubernetes-go-apigen"
+edition = "2018"
+rust-version = "1.58"
+version = "0.0.1"
+
+[[bin]]
+name = "nmstate-kubernetes-go-apigen"
+
+[dependencies]
+anyhow = "1.0.82"
+log = "0.4.21"
+env_logger = "0.11.3"
+regex = "1.10.2"
+clap = { version = "4.5.4", features = ["cargo", "derive"] }
+syn = {version = "2.0.39", features = ["visit", "extra-traits", "full"]}
+convert_case = "0.6.0"
+proc-macro2 = "1.0.56"
