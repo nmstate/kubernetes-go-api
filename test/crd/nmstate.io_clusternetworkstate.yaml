@@ -64,6 +64,12 @@ spec:
                   \ system-id: 176866c7-6dc8-400f-98ac-c658509ec09f\n\tother_config:
                   {}\n\n\n```"
                 properties:
+                  description:
+                    description: |-
+                      Description  Description for the whole desire state. Currently it will not be
+                      persisted by network backend and will be ignored during applying or
+                      querying.
+                    type: string
                   dns-resolver:
                     description: DNS  DNS resolver status, deserialize and serialize
                       from/to `dns-resolver`.
@@ -692,6 +698,13 @@ spec:
                                 SrIov  Single Root I/O Virtualization(SRIOV) configuration.
                                 Deserialize and serialize from/to `sr-iov`.
                               properties:
+                                drivers-autoprobe:
+                                  description: |-
+                                    DriversAutoprobe  Bind created VFs to their default kernel driver.
+                                    This relates to sriov_drivers_autoprobe.
+                                    More info here https://docs.kernel.org/PCI/pci-iov-howto.html#sr-iov-api
+                                    Deserialize and serialize from/to `drivers-autoprobe`.
+                                  type: boolean
                                 total-vfs:
                                   anyOf:
                                   - type: integer
@@ -2200,6 +2213,12 @@ spec:
                             peer:
                               type: string
                           type: object
+                        permanent-mac-address:
+                          description: |-
+                            PermanentMacAddress  MAC address never change after reboots(normally stored in firmware of
+                            network interface). Using the same format as `mac_address` property.
+                            Ignored during apply.
+                          type: string
                         profile-name:
                           type: string
                         state:
@@ -2273,7 +2292,7 @@ spec:
                               type: string
                             reorder-headers:
                               description: ReorderHeaders  reordering of output packet
-                                headers
+                                headers. Default to True if not defined.
                               type: boolean
                           required:
                           - base-iface

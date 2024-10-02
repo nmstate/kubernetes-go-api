@@ -42,6 +42,11 @@ func testUnmarshalDir(t *testing.T, dir string) []ClusterNetworkState {
 		if err != nil {
 			return fmt.Errorf("failed reading state '%s': %v", info.Name(), err)
 		}
+		// the macsec test are wrongly passing offload: off as boolean instea of
+		// offload: "off"
+		if strings.Contains(info.Name(), "macsec") {
+			state = []byte(strings.ReplaceAll(string(state), "offload: off", `offload: "off"`))
+		}
 		clusterNetworkState := ClusterNetworkState{
 			ObjectMeta: metav1.ObjectMeta{
 				Name: generateName("test"),

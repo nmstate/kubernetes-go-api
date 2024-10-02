@@ -207,13 +207,22 @@ func (o *LldpNeighborTlv) UnmarshalJSON(data []byte) error {
 	}
 }
 
+func (o MacSecOffload) MarshalJSON() ([]byte, error) {
+	return []byte(o), nil
+}
+
+func (o *MacSecOffload) UnmarshalJSON(data []byte) error {
+	*o = MacSecOffload(data)
+	return nil
+}
+
 func strictDecoder(data []byte) *json.Decoder {
 	decoder := json.NewDecoder(bytes.NewBuffer(data))
 	decoder.DisallowUnknownFields()
 	return decoder
 }
 
-func (s NetworkState) String() string {
+func (s *NetworkState) String() string {
 	raw, err := json.Marshal(&s)
 	if err != nil {
 		return ""

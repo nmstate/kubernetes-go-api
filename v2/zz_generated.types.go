@@ -1757,7 +1757,7 @@ type VlanConfig struct {
 	Protocol *VlanProtocol `json:"protocol,omitempty"`
 	// RegistrationProtocol  Could be `gvrp`, `mvrp` or `none`. Default to none if not defined.
 	RegistrationProtocol *VlanRegistrationProtocol `json:"registration-protocol,omitempty"`
-	// ReorderHeaders  reordering of output packet headers
+	// ReorderHeaders  reordering of output packet headers. Default to True if not defined.
 	ReorderHeaders *bool `json:"reorder-headers,omitempty"`
 	// LooseBinding  loose binding of the interface to its master device's operating state
 	LooseBinding *bool `json:"loose-binding,omitempty"`
@@ -2054,6 +2054,7 @@ type LoopbackInterface struct {
 //     max-mtu: 9702
 //     ethernet:
 //     sr-iov:
+//     drivers-autoprobe: true
 //     total-vfs: 2
 //     vfs:
 //   - id: 0
@@ -2076,6 +2077,11 @@ type LoopbackInterface struct {
 // ```
 // +k8s:deepcopy-gen=true
 type SrIovConfig struct {
+	// DriversAutoprobe  Bind created VFs to their default kernel driver.
+	// This relates to sriov_drivers_autoprobe.
+	// More info here https://docs.kernel.org/PCI/pci-iov-howto.html#sr-iov-api
+	// Deserialize and serialize from/to `drivers-autoprobe`.
+	DriversAutoprobe *bool `json:"drivers-autoprobe,omitempty"`
 	// TotalVfs  The number of VFs enabled on PF.
 	// Deserialize and serialize from/to `total-vfs`.
 	TotalVfs *intstr.IntOrString `json:"total-vfs,omitempty"`
@@ -2259,6 +2265,10 @@ type BaseInterface struct {
 	// every two characters. Case insensitive when applying.
 	// Serialize and deserialize to/from `mac-address`.
 	MacAddress *string `json:"mac-address,omitempty"`
+	// PermanentMacAddress  MAC address never change after reboots(normally stored in firmware of
+	// network interface). Using the same format as `mac_address` property.
+	// Ignored during apply.
+	PermanentMacAddress *string `json:"permanent-mac-address,omitempty"`
 	// Mtu  Maximum transmission unit.
 	Mtu *intstr.IntOrString `json:"mtu,omitempty"`
 	// MinMtu  Minimum MTU allowed. Ignored during apply.
@@ -2656,6 +2666,10 @@ const HsrProtocolPrp = HsrProtocol("prp")
 // ```
 // +k8s:deepcopy-gen=true
 type NetworkState struct {
+	// Description  Description for the whole desire state. Currently it will not be
+	// persisted by network backend and will be ignored during applying or
+	// querying.
+	Description string `json:"description,omitempty"`
 	// Hostname  Hostname of current host.
 	Hostname *HostNameState `json:"hostname,omitempty"`
 	// DNS  DNS resolver status, deserialize and serialize from/to `dns-resolver`.
