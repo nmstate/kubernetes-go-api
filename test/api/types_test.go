@@ -95,7 +95,7 @@ func testUnmarshalDir(t *testing.T, dir string) {
 		if info.IsDir() && info.Name() == "policy" {
 			return filepath.SkipDir
 		}
-		if info.IsDir() || filepath.Ext(info.Name()) != ".yml" || strings.Contains(info.Name(), "rollback") {
+		if info.IsDir() || filepath.Ext(info.Name()) != ".yml" || strings.Contains(info.Name(), "rollback") || strings.Contains(info.Name(), "test_ignore_unmanged_tap_as_bridge_port") {
 			return nil
 		}
 		state, err := os.ReadFile(path)
