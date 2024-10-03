@@ -251,6 +251,11 @@ type Ieee8021XConfig struct {
 	// PrivateKeyPassword  Deserialize and serialize from/to `private-key-password`.
 	// Replaced to `<_password_hid_by_nmstate>` when querying.
 	PrivateKeyPassword *string `json:"private-key-password,omitempty"`
+	// Phase2Auth  Deserialize and serialize from/to `phase2-auth`.
+	Phase2Auth *string `json:"phase2-auth,omitempty"`
+	// Password  Deserialize and serialize from/to `password`.
+	// Replaced to `<_password_hid_by_nmstate>` when querying.
+	Password *string `json:"password,omitempty"`
 }
 
 // +k8s:deepcopy-gen=true
@@ -1958,9 +1963,8 @@ type VrfConfig struct {
 	// Also deserialize from `ports`.
 	Port *[]string `json:"port"`
 	// TableID  Route table ID of this VRF interface.
-	// Use 0 to preserve current `table_id`.
 	// Deserialize and serialize from/to `route-table-id`.
-	TableID uint32 `json:"route-table-id,omitempty"`
+	TableID *intstr.IntOrString `json:"route-table-id,omitempty"`
 }
 
 // InfiniBandInterface  IP over InfiniBand interface. The example yaml output of a
