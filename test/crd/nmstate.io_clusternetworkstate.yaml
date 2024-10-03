@@ -2295,7 +2295,6 @@ spec:
                                 headers. Default to True if not defined.
                               type: boolean
                           required:
-                          - base-iface
                           - id
                           type: object
                         vrf:

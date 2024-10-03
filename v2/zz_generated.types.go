@@ -1751,8 +1751,8 @@ type VlanInterface struct {
 
 // +k8s:deepcopy-gen=true
 type VlanConfig struct {
-	BaseIface string `json:"base-iface"`
-	ID        uint16 `json:"id"`
+	BaseIface *string `json:"base-iface,omitempty"`
+	ID        uint16  `json:"id"`
 	// Protocol  Could be `802.1q` or `802.1ad`. Default to `802.1q` if not defined.
 	Protocol *VlanProtocol `json:"protocol,omitempty"`
 	// RegistrationProtocol  Could be `gvrp`, `mvrp` or `none`. Default to none if not defined.
