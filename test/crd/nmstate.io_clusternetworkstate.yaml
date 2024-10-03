@@ -173,6 +173,15 @@ spec:
                               type: array
                             identity:
                               type: string
+                            password:
+                              description: |-
+                                Password  Deserialize and serialize from/to `password`.
+                                Replaced to `<_password_hid_by_nmstate>` when querying.
+                              type: string
+                            phase2-auth:
+                              description: Phase2Auth  Deserialize and serialize from/to
+                                `phase2-auth`.
+                              type: string
                             private-key:
                               description: PrivateKey  Deserialize and serialize from/to
                                 `private-key`.
@@ -2308,12 +2317,13 @@ spec:
                                 type: string
                               type: array
                             route-table-id:
+                              anyOf:
+                              - type: integer
+                              - type: string
                               description: |-
                                 TableID  Route table ID of this VRF interface.
-                                Use 0 to preserve current `table_id`.
                                 Deserialize and serialize from/to `route-table-id`.
-                              format: int32
-                              type: integer
+                              x-kubernetes-int-or-string: true
                           required:
                           - port
                           type: object

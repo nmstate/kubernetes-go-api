@@ -516,7 +516,10 @@ import (
     fn parse_field_path_type(&mut self, t: syn::TypePath, field_context: &mut FieldContext) {
         if let Some(last_segment) = t.path.segments.last() {
             let last_segment_name = last_segment.ident.to_string();
-            if last_segment_name == "Option" || last_segment_name == "Vec" {
+            if last_segment_name == "Option"
+                || last_segment_name == "Vec"
+                || last_segment_name == "Box"
+            {
                 self.emitter
                     .emit_type_name(last_segment_name, field_context);
                 if let syn::PathArguments::AngleBracketed(ab) = last_segment.arguments.clone() {
@@ -905,6 +908,8 @@ impl GolangEmitter {
                 self.emit_optional();
             }
             self.output.push_str("InterfaceIP");
+        } else if type_name == "Box" {
+            //no-op
         } else {
             if field_ctx.is_optional {
                 self.emit_optional();

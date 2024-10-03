@@ -4,7 +4,7 @@
 SHELL := /bin/bash
 OUTPUT_DIR=${CURDIR}/.output
 
-NMSTATE_VERSION ?= 2.2.34
+NMSTATE_VERSION ?= 2.2.35
 NMSTATE_E2E_VERSION ?= 2.2.33# We are missing the dumps from newer releases this is the fix https://github.com/nmstate/nmstate/pull/2797
 NMSTATE_REPO ?= https://github.com/nmstate/nmstate
 NMSTATE_SOURCE_TARBALL_URL ?= https://github.com/nmstate/nmstate/archive/refs/tags/v${NMSTATE_VERSION}.tar.gz
