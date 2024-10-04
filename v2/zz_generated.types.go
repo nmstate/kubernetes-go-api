@@ -621,6 +621,9 @@ type RouteEntry struct {
 	RouteType *RouteType `json:"route-type,omitempty"`
 	// Cwnd  Congestion window clamp
 	Cwnd *uint32 `json:"cwnd,omitempty"`
+	// Source  Route source defines which IP address should be used as the source
+	// for packets routed via a specific route
+	Source *string `json:"source,omitempty"`
 }
 
 // +kubebuilder:validation:Enum="blackhole";"unreachable";"prohibit";
@@ -840,7 +843,9 @@ type HostNameState struct {
 	Config  *string `json:"config,omitempty"`
 }
 
-// BondInterface  Bond interface. When serializing or deserializing, the [BaseInterface] will
+// BondInterface  Bond interface.
+//
+// When serializing or deserializing, the [BaseInterface] will
 // be flatted and [BondConfig] stored as `link-aggregation` section. The yaml
 // output [crate::NetworkState] containing an example bond interface:
 // ```yml
@@ -992,10 +997,11 @@ const BondAllPortsActiveDelivered = BondAllPortsActive("delivered")
 
 // enum BondAllPortsActive
 
-// BondArpAllTargets  The `arp_all_targets` kernel bond option: Specifies the quantity of
-// arp_ip_targets that must be reachable in order for the ARP monitor to
-// consider a port as being up. This option affects only active-backup mode
-// for ports with arp_validation enabled.
+// BondArpAllTargets  The `arp_all_targets` kernel bond option.
+//
+// Specifies the quantity of arp_ip_targets that must be reachable in order for
+// the ARP monitor to consider a port as being up. This option affects only
+// active-backup mode for ports with arp_validation enabled.
 // +kubebuilder:validation:Enum="any";"0";"all";"1";
 type BondArpAllTargets string
 
@@ -1008,10 +1014,11 @@ const BondArpAllTargetsAll = BondArpAllTargets("all")
 
 // enum BondArpAllTargets
 
-// BondArpValidate  The `arp_validate` kernel bond option: Specifies whether or not ARP probes
-// and replies should be validated in any mode that supports arp monitoring, or
-// whether non-ARP traffic should be filtered (disregarded) for link monitoring
-// purposes.
+// BondArpValidate  The `arp_validate` kernel bond option.
+//
+// Specifies whether or not ARP probes and replies should be validated in any
+// mode that supports arp monitoring, or whether non-ARP traffic should be
+// filtered (disregarded) for link monitoring purposes.
 // +kubebuilder:validation:Enum="none";"0";"active";"1";"backup";"2";"all";"3";"filter";"4";"filter_active";"5";"filter_backup";"6";
 type BondArpValidate string
 
@@ -1054,10 +1061,12 @@ const BondArpValidateFilterBackup = BondArpValidate("filter_backup")
 
 // enum BondArpValidate
 
-// BondFailOverMac  The `fail_over_mac` kernel bond option: Specifies whether active-backup mode
-// should set all ports to the same MAC address at port attachment (the
-// traditional behavior), or, when enabled, perform special handling of the
-// bond's MAC address in accordance with the selected policy.
+// BondFailOverMac  The `fail_over_mac` kernel bond option.
+//
+// Specifies whether active-backup mode should set all ports to the same MAC
+// address at port attachment (the traditional behavior), or, when enabled,
+// perform special handling of the bond's MAC address in accordance with the
+// selected policy.
 // +kubebuilder:validation:Enum="none";"0";"active";"1";"follow";"2";
 type BondFailOverMac string
 
@@ -1088,11 +1097,12 @@ const BondFailOverMacFollow = BondFailOverMac("follow")
 
 // enum BondFailOverMac
 
-// BondPrimaryReselect  The `primary_reselect` kernel bond option: Specifies the reselection policy
-// for the primary port. This affects how the primary port is chosen to
-// become the active port when failure of the active port or recovery of the
-// primary port occurs. This option is designed to prevent flip-flopping
-// between the primary port and other ports.
+// BondPrimaryReselect  The `primary_reselect` kernel bond option.
+//
+// Specifies the reselection policy for the primary port. This affects how the
+// primary port is chosen to become the active port when failure of the active
+// port or recovery of the primary port occurs. This option is designed to
+// prevent flip-flopping between the primary port and other ports.
 // +kubebuilder:validation:Enum="always";"0";"better";"1";"failure";"2";
 type BondPrimaryReselect string
 
@@ -1116,8 +1126,10 @@ const BondPrimaryReselectFailure = BondPrimaryReselect("failure")
 
 // enum BondPrimaryReselect
 
-// BondXmitHashPolicy  The `xmit_hash_policy` kernel bond option: Selects the transmit hash policy
-// to use for port selection in balance-xor, 802.3ad, and tlb modes.
+// BondXmitHashPolicy  The `xmit_hash_policy` kernel bond option.
+//
+// Selects the transmit hash policy to use for port selection in balance-xor,
+// 802.3ad, and tlb modes.
 // +kubebuilder:validation:Enum="layer2";"0";"layer3+4";"1";"layer2+3";"2";"encap2+3";"3";"encap3+4";"4";"vlan+srcmac";"5";
 type BondXmitHashPolicy string
 
@@ -1961,7 +1973,7 @@ type VrfConfig struct {
 	// Port  Port list.
 	// Deserialize and serialize from/to `port`.
 	// Also deserialize from `ports`.
-	Port *[]string `json:"port"`
+	Port *[]string `json:"port,omitempty"`
 	// TableID  Route table ID of this VRF interface.
 	// Deserialize and serialize from/to `route-table-id`.
 	TableID *intstr.IntOrString `json:"route-table-id,omitempty"`
@@ -2479,10 +2491,11 @@ const MacSecOffloadMac = MacSecOffload("mac")
 
 // enum MacSecOffload
 
-// IpsecInterface  The libreswan Ipsec interface. This interface does not exist in kernel
-// space but only exist in user space tools.
-// This is the example yaml output of [crate::NetworkState] with a libreswan
-// ipsec connection:
+// IpsecInterface  The libreswan Ipsec interface.
+//
+// This interface does not exist in kernel space but only exist in user space
+// tools.  This is the example yaml output of [crate::NetworkState] with a
+// libreswan ipsec connection:
 // ```yaml
 // ---
 // interfaces:
@@ -2517,22 +2530,23 @@ type LibreswanConfig struct {
 	Leftcert       *string `json:"leftcert,omitempty"`
 	Ikev2          *string `json:"ikev2,omitempty"`
 	// Psk  PSK authentication, if not defined, will use X.509 PKI authentication
-	Psk               *string                  `json:"psk,omitempty"`
-	Ikelifetime       *string                  `json:"ikelifetime,omitempty"`
-	Salifetime        *string                  `json:"salifetime,omitempty"`
-	Ike               *string                  `json:"ike,omitempty"`
-	Esp               *string                  `json:"esp,omitempty"`
-	Dpddelay          *intstr.IntOrString      `json:"dpddelay,omitempty"`
-	Dpdtimeout        *intstr.IntOrString      `json:"dpdtimeout,omitempty"`
-	Dpdaction         *string                  `json:"dpdaction,omitempty"`
-	IpsecInterface    *intstr.IntOrString      `json:"ipsec-interface,omitempty"`
-	Authby            *string                  `json:"authby,omitempty"`
-	Rightsubnet       *string                  `json:"rightsubnet,omitempty"`
-	Leftsubnet        *string                  `json:"leftsubnet,omitempty"`
-	Leftmodecfgclient *bool                    `json:"leftmodecfgclient,omitempty"`
-	Kind              *LibreswanConnectionType `json:"type,omitempty"`
-	Hostaddrfamily    *LibreswanAddressFamily  `json:"hostaddrfamily,omitempty"`
-	Clientaddrfamily  *LibreswanAddressFamily  `json:"clientaddrfamily,omitempty"`
+	Psk                    *string                  `json:"psk,omitempty"`
+	Ikelifetime            *string                  `json:"ikelifetime,omitempty"`
+	Salifetime             *string                  `json:"salifetime,omitempty"`
+	Ike                    *string                  `json:"ike,omitempty"`
+	Esp                    *string                  `json:"esp,omitempty"`
+	Dpddelay               *intstr.IntOrString      `json:"dpddelay,omitempty"`
+	Dpdtimeout             *intstr.IntOrString      `json:"dpdtimeout,omitempty"`
+	Dpdaction              *string                  `json:"dpdaction,omitempty"`
+	IpsecInterface         *intstr.IntOrString      `json:"ipsec-interface,omitempty"`
+	Authby                 *string                  `json:"authby,omitempty"`
+	Rightsubnet            *string                  `json:"rightsubnet,omitempty"`
+	Leftsubnet             *string                  `json:"leftsubnet,omitempty"`
+	Leftmodecfgclient      *bool                    `json:"leftmodecfgclient,omitempty"`
+	Kind                   *LibreswanConnectionType `json:"type,omitempty"`
+	Hostaddrfamily         *LibreswanAddressFamily  `json:"hostaddrfamily,omitempty"`
+	Clientaddrfamily       *LibreswanAddressFamily  `json:"clientaddrfamily,omitempty"`
+	RequireIDOnCertificate *bool                    `json:"require-id-on-certificate,omitempty"`
 }
 
 // +kubebuilder:validation:Enum="tunnel";"transport";
@@ -2770,6 +2784,7 @@ type BridgeOptions struct {
 // BridgeConfig Linux or OVS bridge configuration
 //
 // Linux bridge:   Bridge interface provided by linux kernel.
+//
 // When serializing or deserializing, the [BaseInterface] will
 // be flatted and [LinuxBridgeConfig] stored as `bridge` section. The yaml
 // output [crate::NetworkState] containing an example linux bridge interface:
