@@ -204,6 +204,8 @@ spec:
 
 
                             Linux bridge:   Bridge interface provided by linux kernel.
+
+
                             When serializing or deserializing, the [BaseInterface] will
                             be flatted and [LinuxBridgeConfig] stored as `bridge` section. The yaml
                             output [crate::NetworkState] containing an example linux bridge interface:
@@ -1323,6 +1325,8 @@ spec:
                               description: Psk  PSK authentication, if not defined,
                                 will use X.509 PKI authentication
                               type: string
+                            require-id-on-certificate:
+                              type: boolean
                             right:
                               type: string
                             rightcert:
@@ -2324,8 +2328,6 @@ spec:
                                 TableID  Route table ID of this VRF interface.
                                 Deserialize and serialize from/to `route-table-id`.
                               x-kubernetes-int-or-string: true
-                          required:
-                          - port
                           type: object
                         vxlan:
                           properties:
@@ -2576,6 +2578,11 @@ spec:
                               - unreachable
                               - prohibit
                               type: string
+                            source:
+                              description: |-
+                                Source  Route source defines which IP address should be used as the source
+                                for packets routed via a specific route
+                              type: string
                             state:
                               description: State  Only used for delete route when
                                 applying.
@@ -2656,6 +2663,11 @@ spec:
                               - blackhole
                               - unreachable
                               - prohibit
+                              type: string
+                            source:
+                              description: |-
+                                Source  Route source defines which IP address should be used as the source
+                                for packets routed via a specific route
                               type: string
                             state:
                               description: State  Only used for delete route when
